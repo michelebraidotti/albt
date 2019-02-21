@@ -1,0 +1,8 @@
+{
+    "backup_server" :"silverbox",
+    "home_dir" :"/home/michele/.albt",
+    "log_dir" :"/home/michele/.albt",
+    "max_time_bween_backups" :"1234556",
+    "log_level" :"debug",
+    "rsync_cmd" : "rsync --archive --compress --delete --dry-run --progress --partial /home/.ecryptfs/michele/.Private michele@silverbox:/mnt/3tbdrive/backup/silverone_michele/"
+}

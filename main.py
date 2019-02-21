@@ -15,16 +15,20 @@ class MainApp():
     def __init__(self):
         self.conf = Configuration()
         self.n_of_backup_server_ping_attempts = 0
+        self.server_is_up = False
 
     def backup_server_is_up(self):
         response = os.system("ping -c 1 " + self.conf.backup_server)
         if response == 0:
+            self.server_is_up = True
             return True
         else:
             self.n_of_backup_server_ping_attempts += 1
+            self.server_is_up = False
             return False
 
     def execute_backup(self):
+        print(self.conf.rsync_cmd)
         pass
 
     def check_server(self):
@@ -38,8 +42,6 @@ class MainApp():
             win = ServerDownWindow(message)
             win.show_all()
             Gtk.main()
-            print("Window is gone, we move on ... ")
-            print(win.button_try_again_pressed)
             if win.button_try_again_pressed:
                 win.destroy()
                 continue
@@ -49,9 +51,8 @@ class MainApp():
 
 main_app = MainApp()
 main_app.check_server()
-if not main_app.abort_operation:
+if main_app.server_is_up:
     main_app.execute_backup()
-    main_app.log
 # if conf.last_backup_date + Configuration.MAX_TIME_BWEEN_BACKUPS > time.time():
 #    execute_backup()
 
