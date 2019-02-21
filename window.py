@@ -6,4 +6,4 @@ from gi.repository import Gtk
 class Window(Gtk.ApplicationWindow):
 
     def __init__(self, app):
-        Gtk.Window.__init__(self, title="A little backup tool", application=app)
+        Gtk.Window.__init__(self, title="A Little Backup Tool", application=app)
