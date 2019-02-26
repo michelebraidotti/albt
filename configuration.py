@@ -4,9 +4,6 @@ import logging
 import os
 import random
 import time
-import configparser
-from pathlib import Path
-
 
 class Configuration:
     DEFAULT_HOME_DIR = os.path.join(os.path.expanduser('~'), '.albt')
@@ -22,14 +19,13 @@ class Configuration:
         self.log_dir = self.DEFAULT_LOG_DIR
         self.max_time_bween_backups = self.DEFAULT_MAX_TIME_BWEEN_BACKUPS
         self.log_level = self.DEFAULT_LOG_LEVEL
+        self.log_file = ""
         self.rsync_cmd = ""
-        self.setup(config_file) # If possible overrides defaults
+        self.setup(config_file)  # If possible, overrides defaults
         if not os.path.isdir(self.home_dir):
             os.makedirs(self.home_dir)
         if not os.path.isdir(self.log_dir):
             os.makedirs(self.log_dir)
-        self.logger = None
-        self.set_up_logging()
         self.last_backup_date = None
         self.last_backup_date_file = os.path.join(self.home_dir, 'last_backup')
         self.set_last_backup_date()
@@ -52,33 +48,11 @@ class Configuration:
                     self.log_level = conf['log_level']
                 if 'rsync_cmd' in conf:
                     self.rsync_cmd = conf['rsync_cmd']
-        # else the defaults will be used
-
-    def set_up_logging(self):
+                if 'log_level' in conf:
+                    self.log_level = conf['log_level']
         timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H%M%S')
         random_digits = "{:03d}".format(random.randint(0, 999))
-        log_file = os.path.join(self.log_dir, timestamp + "_" + random_digits + ".log")
-        logger = logging.getLogger(self.log_dir)
-        if self.log_level == 'info':
-            logger.setLevel(logging.INFO)
-        elif self.log_level == 'critical':
-            logger.setLevel(logging.CRITICAL)
-        elif self.log_level == 'error':
-            logger.setLevel(logging.ERROR)
-        elif self.log_level == 'warning':
-            logger.setLevel(logging.WARNING)
-        elif self.log_level == 'warn':
-            logger.setLevel(logging.WARNING)
-        elif self.log_level == 'debug':
-            logger.setLevel(logging.DEBUG)
-        elif self.log_level == 'notset':
-            logger.setLevel(logging.NOTSET)
-        else:
-            logger.setLevel(logging.NOTSET)
-        handler = logging.FileHandler(filename=log_file)
-        handler.setFormatter(logging.Formatter(fmt='%(asctime)s %(message)s'))
-        logger.addHandler(handler)
-        self.logger = logger
+        self.log_file = os.path.join(self.log_dir, timestamp + "_" + random_digits + ".log")
 
     def set_last_backup_date(self):
         if os.path.isfile(self.last_backup_date_file):

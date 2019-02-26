@@ -1,21 +1,16 @@
 import gi
 
+from albt_windows import AlbtWindow
+
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
 
-class ServerDownWindow(Gtk.Window):
+class ServerDownWindow(AlbtWindow):
 
     def __init__(self, message):
-        Gtk.Window.__init__(self, title="A Little Backup Tool")
+        AlbtWindow.__init__(self)
         self.button_try_again_pressed = False
-        self.connect("destroy", Gtk.main_quit)
-        self.set_border_width(10)
-
-        title_bar = Gtk.HeaderBar(title="A Little Backup Tool")
-        title_bar.set_subtitle("In an attempt to help remembering backups!")
-        title_bar.set_show_close_button(True)
-
         button_try = Gtk.Button(label="Try again")
         button_try.connect("clicked", self.on_try_again_clicked)
 
@@ -25,8 +20,6 @@ class ServerDownWindow(Gtk.Window):
         box.pack_start(label_msg, True, True, 0)
         box.pack_start(button_try, True, True, 0)
         self.add(box)
-
-        self.set_titlebar(title_bar)
 
     def on_try_again_clicked(self, button):
         # inform the main program that we want to try again
