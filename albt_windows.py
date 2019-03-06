@@ -12,6 +12,7 @@ class AlbtWindow(Gtk.Window):
         Gtk.Window.__init__(self, title=self.TITLE)
         self.connect("destroy", Gtk.main_quit)
         self.set_border_width(10)
+        self.set_resizable(False)
 
         title_bar = Gtk.HeaderBar(title=self.TITLE)
         title_bar.set_subtitle(self.SUBTITLE)
